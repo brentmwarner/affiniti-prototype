@@ -19,7 +19,7 @@ export interface Member {
   personalPhone: string;
   email: string;
   status: 'active' | 'inactive' | 'pending' | 'churned';
-  membershipTier: 'basic' | 'premium' | 'enterprise';
+  membershipTier: 'pharmacy' | 'staff_pharmacist' | 'student' | 'retired' | 'sustaining' | 'corporate' | 'ltc_division';
   membershipPrice: number;
   renewalDate: string;
   joinDate: string;
