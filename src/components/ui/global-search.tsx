@@ -396,11 +396,9 @@ export const GlobalSearch = forwardRef<GlobalSearchRef, GlobalSearchProps>(({
   return (
     <div className={cn("relative", className)} ref={dropdownRef}>
       {/* Search Input */}
-      <div className="flex h-8 items-center px-3 py-2.5 relative w-full bg-white rounded-md overflow-hidden border border-solid">
-        <div className="inline-flex items-center pl-0 pr-2 py-0 relative flex-[0_0_auto] mt-[-2.00px] mb-[-2.00px]">
-          <SearchIcon className="w-4 h-4 text-gray-400" />
-        </div>
-        <input
+      <div className="relative w-full">
+        <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        <Input
           ref={inputRef}
           type="text"
           value={query}
@@ -412,10 +410,10 @@ export const GlobalSearch = forwardRef<GlobalSearchRef, GlobalSearchProps>(({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search"
-          className="relative flex-1 h-5 mt-[-5.00px] mb-[-3.00px] bg-transparent border-none outline-none font-text-sm-leading-5-normal font-[number:var(--text-sm-leading-5-normal-font-weight)] text-zinc-950 text-[length:var(--text-sm-leading-5-normal-font-size)] tracking-[var(--text-sm-leading-5-normal-letter-spacing)] leading-[var(--text-sm-leading-5-normal-line-height)] placeholder:text-gray-400 placeholder:opacity-50 [font-style:var(--text-sm-leading-5-normal-font-style)]"
+          className="pl-9 pr-12"
         />
-        <div className="flex w-5 items-center justify-center gap-2 px-0.5 py-[3px] relative mt-[-3.00px] mb-[-3.00px] bg-[#e5e7eb8c] rounded">
-          <div className="relative w-[18px] mt-[-0.50px] ml-[-1.00px] mr-[-1.00px] [font-family:'Inter',Helvetica] font-medium text-gray-400 text-[10px] tracking-[1.00px] leading-3">
+        <div className="absolute right-3 top-2.5 flex w-5 h-4 items-center justify-center px-0.5 py-[3px] bg-[#e5e7eb8c] rounded">
+          <div className="text-[10px] font-medium text-gray-400 tracking-[1.00px] leading-3 font-['Inter']">
             ⌘K
           </div>
         </div>

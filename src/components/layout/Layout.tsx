@@ -1,10 +1,10 @@
 import {
-  BarChart3Icon,
   BellIcon,
+  ChartNoAxesColumnIcon,
   ChevronsUpDownIcon,
   CreditCardIcon,
-  LayoutDashboardIcon,
   LayoutPanelLeftIcon,
+  MegaphoneIcon,
   PanelLeftCloseIcon,
   PlusIcon,
   RefreshCwIcon,
@@ -53,7 +53,7 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
   // Navigation menu items data
   const navItems = [
     {
-      icon: <LayoutDashboardIcon className="w-4 h-4" />,
+      icon: <ChartNoAxesColumnIcon className="w-4 h-4" />,
       label: "Dashboard",
       active: activeNav === "Dashboard",
       path: "/dashboard",
@@ -77,7 +77,7 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
       path: "/billing",
     },
     {
-      icon: <BarChart3Icon className="w-4 h-4" />,
+      icon: <MegaphoneIcon className="w-4 h-4" />,
       label: "Marketing",
       active: activeNav === "Marketing",
       path: "/marketing",
