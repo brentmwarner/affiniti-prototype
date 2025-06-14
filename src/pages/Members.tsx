@@ -10,13 +10,12 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { Checkbox } from "../components/ui/checkbox";
-import { SearchIcon, MoreVerticalIcon, EyeIcon, EditIcon, CircleCheck, CircleX, Loader, Filter, Columns, ChevronDown, LayoutGrid, LayoutList } from "lucide-react";
+import { SearchIcon, MoreVerticalIcon, EyeIcon, EditIcon, CircleCheck, CircleX, Loader, Columns, ChevronDown, LayoutGrid, LayoutList, Download, Trash2, Send, Settings } from "lucide-react";
 
 import { Layout } from "../components/layout/Layout";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import {
   Select,
   SelectContent,
@@ -43,6 +42,7 @@ import {
 } from "../components/ui/table";
 import { Member, Application } from "../types/member";
 import { mockPharmacyMembers, mockApplications } from "../data/generateMockData";
+import { useToast } from "../components/ui/toast";
 
 const getStatusColor = (status: Member['status']) => {
   switch (status) {
@@ -70,6 +70,7 @@ export const Members = (): JSX.Element => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState<"full" | "condensed">("full");
+  const { showToast } = useToast();
 
   const columns: ColumnDef<Member>[] = [
     {
@@ -481,6 +482,38 @@ export const Members = (): JSX.Element => {
 
   const pageSizeOptions = [10, 25, 50, 100, 200];
 
+  // Calculate selected members data
+  const selectedMembersData = useMemo(() => {
+    const selectedRows = table.getSelectedRowModel().rows;
+    const count = selectedRows.length;
+    const total = selectedRows.reduce((sum, row) => {
+      const member = row.original as Member;
+      return sum + member.membershipPrice;
+    }, 0);
+    return { count, total };
+  }, [rowSelection, table]);
+
+  // Handlers for selection menu actions
+  const handleExportSelected = () => {
+    showToast("Export started");
+    setRowSelection({});
+  };
+
+  const handleSendInvoice = () => {
+    showToast("Invoices sent successfully");
+    setRowSelection({});
+  };
+
+  const handleUpdateStatus = () => {
+    showToast("Status updated");
+    setRowSelection({});
+  };
+
+  const handleDeleteSelected = () => {
+    showToast("Members deleted");
+    setRowSelection({});
+  };
+
   const tabs = [
     { 
       id: "all", 
@@ -604,7 +637,6 @@ export const Members = (): JSX.Element => {
             </div>
             
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -687,29 +719,6 @@ export const Members = (): JSX.Element => {
               </DropdownMenu>
             </div>
           </div>
-          
-          {/* Selection Actions */}
-          {Object.keys(rowSelection).length > 0 && (
-            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <span className="text-sm text-blue-800 font-medium">
-                {Object.keys(rowSelection).length} member(s) selected
-              </span>
-              <div className="flex items-center gap-2 ml-auto">
-                <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                  Export Selected
-                </Button>
-                <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                  Send Invoice
-                </Button>
-                <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                  Update Status
-                </Button>
-                <Button variant="destructive" size="sm">
-                  Delete Selected
-                </Button>
-              </div>
-            </div>
-          )}
 
           {/* Table */}
           <div className="bg-white overflow-x-auto">
@@ -738,6 +747,12 @@ export const Members = (): JSX.Element => {
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
                         className="cursor-pointer hover:bg-gray-50 border-b border-gray-100"
+                        onClick={(e) => {
+                          if ((e.target as HTMLElement).closest('.dropdown, button, input, [role="button"]')) {
+                            return;
+                          }
+                          setSelectedApplication(row.original);
+                        }}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id} className="text-gray-600 px-4 py-3">
@@ -786,6 +801,12 @@ export const Members = (): JSX.Element => {
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
                         className="cursor-pointer hover:bg-gray-50 border-b border-gray-100"
+                        onClick={(e) => {
+                          if ((e.target as HTMLElement).closest('.dropdown, button, input, [role="button"]')) {
+                            return;
+                          }
+                          setSelectedMember(row.original);
+                        }}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id} className="text-gray-600 px-4 py-3">
@@ -892,269 +913,368 @@ export const Members = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Member Detail Modal */}
+        {/* Member Detail Side Tray */}
         {selectedMember && (
-          <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedMember(null)}
-          >
-            <Card 
-              className="max-w-2xl w-full max-h-[80vh] overflow-y-auto bg-white border-gray-200 shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CardHeader>
+          <div className="fixed inset-0 z-50 flex">
+            {/* Backdrop */}
+            <div 
+              className="flex-1 bg-black/50 transition-opacity duration-300 ease-out animate-in fade-in-0"
+              onClick={() => setSelectedMember(null)}
+            />
+            
+            {/* Side Tray */}
+            <div className="w-96 h-full bg-white border-l border-gray-200 shadow-2xl overflow-y-auto transform transition-all duration-300 ease-out animate-in slide-in-from-right-0 data-[state=open]:slide-in-from-right-0">
+              <div className="p-6 space-y-8">
+                {/* Header */}
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl">{selectedMember.businessName}</CardTitle>
-                    <p className="text-gray-600">{selectedMember.contactName}</p>
-                  </div>
+                  <h3 className="text-sm font-medium text-gray-500">Member</h3>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedMember(null)}
+                    className="text-gray-400 hover:text-gray-600 -mt-1 -mr-2"
                   >
                     ×
                   </Button>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Basic Info */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Member ID</label>
-                    <p className="mt-1">{selectedMember.membershipId}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Status</label>
-                    <div className="mt-1">
-                      <Badge className={getStatusColor(selectedMember.status)}>
-                        {selectedMember.status === 'active' && <CircleCheck className="w-3 h-3 mr-2 text-green-700" />}
-                        {selectedMember.status === 'churned' && <CircleX className="w-3 h-3 mr-2 text-red-700" />}
-                        {(selectedMember.status === 'pending' || selectedMember.status === 'inactive') && <Loader className="w-3 h-3 mr-2 text-gray-800" />}
-                        {selectedMember.status.charAt(0).toUpperCase() + selectedMember.status.slice(1)}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Membership Tier</label>
-                    <p className="mt-1">
-                      {(() => {
-                        const tier = selectedMember.membershipTier;
-                        switch (tier) {
-                          case 'pharmacy': return 'Pharmacy';
-                          case 'staff_pharmacist': return 'Staff Pharmacist';
-                          case 'sustaining': return 'Sustaining';
-                          case 'retired': return 'Retired';
-                          case 'student': return 'Student';
-                          case 'ltc_division': return 'LTC Division';
-                          case 'corporate': return 'Corporate';
-                          default: return tier;
-                        }
-                      })()}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Annual Price</label>
-                    <p className="mt-1">${selectedMember.membershipPrice.toLocaleString()}</p>
-                  </div>
-                </div>
 
-                {/* Contact Information */}
+                {/* Business Name */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Email</label>
-                      <p className="mt-1 break-words">{selectedMember.email}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Business Phone</label>
-                      <p className="mt-1">{selectedMember.businessPhone}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Personal Phone</label>
-                      <p className="mt-1">{selectedMember.personalPhone}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Addresses */}
-                <div>
-                  <h3 className="text-lg font-medium mb-3">Addresses</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Business Address</label>
-                      <div className="mt-1">
-                        <p>{selectedMember.businessAddress.street}</p>
-                        <p>{selectedMember.businessAddress.city}, {selectedMember.businessAddress.state} {selectedMember.businessAddress.zipCode}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Home Address</label>
-                      <div className="mt-1">
-                        <p>{selectedMember.homeAddress.street}</p>
-                        <p>{selectedMember.homeAddress.city}, {selectedMember.homeAddress.state} {selectedMember.homeAddress.zipCode}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Membership Details */}
-                <div>
-                  <h3 className="text-lg font-medium mb-3">Membership Details</h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Join Date</label>
-                      <p className="mt-1">{new Date(selectedMember.joinDate).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Renewal Date</label>
-                      <p className="mt-1">{new Date(selectedMember.renewalDate).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Last Activity</label>
-                      <p className="mt-1">{new Date(selectedMember.lastActivity).toLocaleDateString()}</p>
-                    </div>
-                  </div>
+                  <h1 className="text-3xl font-normal text-gray-900">{selectedMember.businessName}</h1>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 pt-4 border-t">
-                  <Button className="flex-1">Edit Member</Button>
-                  <Button variant="secondary" className="flex-1">Send Invoice</Button>
-                  <Button variant="secondary" className="flex-1">Contact Member</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* Application Detail Modal */}
-        {selectedApplication && (
-          <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedApplication(null)}
-          >
-            <Card 
-              className="max-w-2xl w-full max-h-[80vh] overflow-y-auto bg-white border-gray-200 shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl">{selectedApplication.businessName}</CardTitle>
-                    <p className="text-gray-600">{selectedApplication.contactName}</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedApplication(null)}
-                  >
-                    ×
+                <div className="grid grid-cols-3 gap-3">
+                  <Button variant="secondary" size="sm">
+                    <EditIcon className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button variant="secondary" size="sm">
+                    <Send className="h-4 w-4 mr-2" />
+                    Invoice
+                  </Button>
+                  <Button variant="secondary" size="sm" className="text-red-600 hover:text-red-700">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
                   </Button>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Basic Info */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Application ID</label>
-                    <p className="mt-1">{selectedApplication.applicationId}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Status</label>
-                    <p className="mt-1">
-                      {(() => {
-                        const status = selectedApplication.status;
-                        switch (status) {
-                          case 'pending_review': return 'Pending Review';
-                          case 'under_review': return 'Under Review';
-                          case 'approved': return 'Approved';
-                          case 'rejected': return 'Rejected';
-                          case 'requires_info': return 'Requires Info';
-                        }
-                      })()}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Requested Tier</label>
-                    <p className="mt-1">
-                      {(() => {
-                        const tier = selectedApplication.requestedTier;
-                        switch (tier) {
-                          case 'pharmacy': return 'Pharmacy';
-                          case 'staff_pharmacist': return 'Staff Pharmacist';
-                          case 'sustaining': return 'Sustaining';
-                          case 'retired': return 'Retired';
-                          case 'student': return 'Student';
-                          case 'ltc_division': return 'LTC Division';
-                          case 'corporate': return 'Corporate';
-                          default: return tier;
-                        }
-                      })()}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Submitted Date</label>
-                    <p className="mt-1">{new Date(selectedApplication.submittedDate).toLocaleDateString()}</p>
+
+                {/* Member ID */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Member ID</h4>
+                  <p className="text-gray-900">{selectedMember.membershipId}</p>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Status</h4>
+                  <div className="mt-1">
+                    <Badge className={getStatusColor(selectedMember.status)}>
+                      {selectedMember.status === 'active' && <CircleCheck className="w-3 h-3 mr-2 text-green-700" />}
+                      {selectedMember.status === 'churned' && <CircleX className="w-3 h-3 mr-2 text-red-700" />}
+                      {(selectedMember.status === 'pending' || selectedMember.status === 'inactive') && <Loader className="w-3 h-3 mr-2 text-gray-800" />}
+                      {selectedMember.status.charAt(0).toUpperCase() + selectedMember.status.slice(1)}
+                    </Badge>
                   </div>
                 </div>
 
-                {/* Contact Information */}
+                {/* Contact Name */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Email</label>
-                      <p className="mt-1 break-words">{selectedApplication.email}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Business Phone</label>
-                      <p className="mt-1">{selectedApplication.businessPhone}</p>
-                    </div>
-                  </div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Contact Name</h4>
+                  <p className="text-gray-900">{selectedMember.contactName}</p>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Email</h4>
+                  <p className="text-gray-900 break-words overflow-wrap-anywhere">{selectedMember.email}</p>
+                </div>
+
+                {/* Business Phone */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Business Phone</h4>
+                  <p className="text-gray-900">{selectedMember.businessPhone}</p>
+                </div>
+
+                {/* Personal Phone */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Personal Phone</h4>
+                  <p className="text-gray-900">{selectedMember.personalPhone}</p>
                 </div>
 
                 {/* Business Address */}
                 <div>
-                  <h3 className="text-lg font-medium mb-3">Business Address</h3>
-                  <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Business Address</h4>
+                  <div className="text-gray-900">
+                    <p>{selectedMember.businessAddress.street}</p>
+                    <p>{selectedMember.businessAddress.city}, {selectedMember.businessAddress.state} {selectedMember.businessAddress.zipCode}</p>
+                  </div>
+                </div>
+
+                {/* Home Address */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Home Address</h4>
+                  <div className="text-gray-900">
+                    <p>{selectedMember.homeAddress.street}</p>
+                    <p>{selectedMember.homeAddress.city}, {selectedMember.homeAddress.state} {selectedMember.homeAddress.zipCode}</p>
+                  </div>
+                </div>
+
+                {/* Membership Tier */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Membership Tier</h4>
+                  <p className="text-gray-900">
+                    {(() => {
+                      const tier = selectedMember.membershipTier;
+                      switch (tier) {
+                        case 'pharmacy': return 'Pharmacy';
+                        case 'staff_pharmacist': return 'Staff Pharmacist';
+                        case 'sustaining': return 'Sustaining';
+                        case 'retired': return 'Retired';
+                        case 'student': return 'Student';
+                        case 'ltc_division': return 'LTC Division';
+                        case 'corporate': return 'Corporate';
+                        default: return tier;
+                      }
+                    })()}
+                  </p>
+                </div>
+
+                {/* Annual Price */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Annual Price</h4>
+                  <p className="text-gray-900 font-medium">${selectedMember.membershipPrice.toLocaleString()}</p>
+                </div>
+
+                {/* Join Date */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Join Date</h4>
+                  <p className="text-gray-900">{new Date(selectedMember.joinDate).toLocaleDateString()}</p>
+                </div>
+
+                {/* Renewal Date */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Renewal Date</h4>
+                  <p className="text-gray-900">{new Date(selectedMember.renewalDate).toLocaleDateString()}</p>
+                </div>
+
+                {/* Last Activity */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Last Activity</h4>
+                  <p className="text-gray-900">{new Date(selectedMember.lastActivity).toLocaleDateString()}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Application Detail Side Tray */}
+        {selectedApplication && (
+          <div className="fixed inset-0 z-50 flex">
+            {/* Backdrop */}
+            <div 
+              className="flex-1 bg-black/50 transition-opacity duration-300 ease-out animate-in fade-in-0"
+              onClick={() => setSelectedApplication(null)}
+            />
+            
+            {/* Side Tray */}
+            <div className="w-96 h-full bg-white border-l border-gray-200 shadow-2xl overflow-y-auto transform transition-all duration-300 ease-out animate-in slide-in-from-right-0 data-[state=open]:slide-in-from-right-0">
+              <div className="p-6 space-y-8">
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                  <h3 className="text-sm font-medium text-gray-500">Application</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedApplication(null)}
+                    className="text-gray-400 hover:text-gray-600 -mt-1 -mr-2"
+                  >
+                    ×
+                  </Button>
+                </div>
+
+                {/* Business Name */}
+                <div>
+                  <h1 className="text-3xl font-normal text-gray-900">{selectedApplication.businessName}</h1>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="grid grid-cols-3 gap-3">
+                  <Button variant="secondary" size="sm">
+                    <EditIcon className="h-4 w-4 mr-2" />
+                    Review
+                  </Button>
+                  <Button variant="secondary" size="sm">
+                    <Send className="h-4 w-4 mr-2" />
+                    Approve
+                  </Button>
+                  <Button variant="secondary" size="sm" className="text-red-600 hover:text-red-700">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Reject
+                  </Button>
+                </div>
+
+                {/* Application ID */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Application ID</h4>
+                  <p className="text-gray-900">{selectedApplication.applicationId}</p>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Status</h4>
+                  <p className="text-gray-900 font-medium">
+                    {(() => {
+                      const status = selectedApplication.status;
+                      switch (status) {
+                        case 'pending_review': return 'Pending Review';
+                        case 'under_review': return 'Under Review';
+                        case 'approved': return 'Approved';
+                        case 'rejected': return 'Rejected';
+                        case 'requires_info': return 'Requires Info';
+                        default: return status;
+                      }
+                    })()}
+                  </p>
+                </div>
+
+                {/* Contact Name */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Contact Name</h4>
+                  <p className="text-gray-900">{selectedApplication.contactName}</p>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Email</h4>
+                  <p className="text-gray-900 break-words overflow-wrap-anywhere">{selectedApplication.email}</p>
+                </div>
+
+                {/* Business Phone */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Business Phone</h4>
+                  <p className="text-gray-900">{selectedApplication.businessPhone}</p>
+                </div>
+
+                {/* Business Address */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Business Address</h4>
+                  <div className="text-gray-900">
                     <p>{selectedApplication.businessAddress.street}</p>
                     <p>{selectedApplication.businessAddress.city}, {selectedApplication.businessAddress.state} {selectedApplication.businessAddress.zipCode}</p>
                   </div>
                 </div>
 
+                {/* Requested Tier */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Requested Tier</h4>
+                  <p className="text-gray-900">
+                    {(() => {
+                      const tier = selectedApplication.requestedTier;
+                      switch (tier) {
+                        case 'pharmacy': return 'Pharmacy';
+                        case 'staff_pharmacist': return 'Staff Pharmacist';
+                        case 'sustaining': return 'Sustaining';
+                        case 'retired': return 'Retired';
+                        case 'student': return 'Student';
+                        case 'ltc_division': return 'LTC Division';
+                        case 'corporate': return 'Corporate';
+                        default: return tier;
+                      }
+                    })()}
+                  </p>
+                </div>
+
+                {/* Submitted Date */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Submitted Date</h4>
+                  <p className="text-gray-900">{new Date(selectedApplication.submittedDate).toLocaleDateString()}</p>
+                </div>
+
                 {/* Review Information */}
                 {(selectedApplication.reviewedBy || selectedApplication.notes) && (
-                  <div>
-                    <h3 className="text-lg font-medium mb-3">Review Information</h3>
-                    <div className="grid grid-cols-1 gap-4">
-                      {selectedApplication.reviewedBy && (
-                        <div>
-                          <label className="text-sm font-medium text-gray-600">Reviewed By</label>
-                          <p className="mt-1">{selectedApplication.reviewedBy}</p>
-                        </div>
-                      )}
-                      {selectedApplication.notes && (
-                        <div>
-                          <label className="text-sm font-medium text-gray-600">Notes</label>
-                          <p className="mt-1">{selectedApplication.notes}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <>
+                    {selectedApplication.reviewedBy && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-600 mb-1">Reviewed By</h4>
+                        <p className="text-gray-900">{selectedApplication.reviewedBy}</p>
+                      </div>
+                    )}
+                    {selectedApplication.notes && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-600 mb-1">Notes</h4>
+                        <p className="text-gray-900 break-words">{selectedApplication.notes}</p>
+                      </div>
+                    )}
+                  </>
                 )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-2 pt-4 border-t">
-                  <Button className="flex-1">Approve Application</Button>
-                  <Button variant="secondary" className="flex-1">Request More Info</Button>
-                  <Button variant="destructive" className="flex-1">Reject Application</Button>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
+
+        {/* Animated Selection Menu */}
+        <div 
+          className={`fixed bottom-16 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+            selectedMembersData.count > 0 
+              ? 'transform translate-y-0 opacity-100' 
+              : 'transform translate-y-full opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="flex justify-center">
+            <div className="bg-white/75 backdrop-blur-sm border border-gray-100 rounded-full shadow-lg px-4 py-3 flex items-center gap-6">
+              {/* Selection Info */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm leading-6 font-medium text-gray-800">
+                  {selectedMembersData.count} member{selectedMembersData.count !== 1 ? 's' : ''} selected
+                </span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                {/* Export Button */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportSelected}
+                  className="h-8 w-8 p-0"
+                >
+                  <Download className="h-4 w-4 text-gray-600" />
+                </Button>
+
+                {/* Send Invoice Button */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleSendInvoice}
+                  className="h-8 w-8 p-0"
+                >
+                  <Send className="h-4 w-4 text-gray-600" />
+                </Button>
+
+                {/* Delete Button */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleDeleteSelected}
+                  className="h-8 w-8 p-0"
+                >
+                  <Trash2 className="h-4 w-4 text-red-700" />
+                </Button>
+
+                {/* Update Status Button - Primary Action */}
+                <Button
+                  onClick={handleUpdateStatus}
+                  size="sm"
+                  className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-full px-3 py-2 h-9 flex items-center gap-1.5"
+                >
+                  <Settings className="h-3 w-3" />
+                  <span className="text-xs font-medium">Update Status</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );

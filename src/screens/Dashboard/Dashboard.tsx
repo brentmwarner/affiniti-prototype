@@ -18,6 +18,8 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { DashboardMetrics } from "../../components/dashboard/DashboardMetrics";
 import { MembershipPerformanceChart } from "../../components/dashboard/MembershipPerformanceChart";
+import { RecentApplicationsCard } from "../../components/dashboard/RecentApplicationsCard";
+import { TopMemberLocationsCard } from "../../components/dashboard/TopMemberLocationsCard";
 
 export const Dashboard = (): JSX.Element => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -158,7 +160,7 @@ export const Dashboard = (): JSX.Element => {
       </div>
 
       {/* Main content */}
-      <Card className="flex flex-col relative flex-1 h-full rounded-r-xl overflow-hidden shadow-shadows-shadow bg-white">
+      <Card className="flex flex-col relative flex-1 h-full rounded-r-xl overflow-hidden bg-white border-0" style={{ boxShadow: '0 0 2px 0 #afb2ce8f, 0 1px 4px 0 #0404341a' }}>
         {/* Top navigation bar */}
         <div className="flex items-center justify-between p-3 relative self-stretch w-full flex-[0_0_auto] border-b [border-bottom-style:solid] border-gray-100 bg-white/45 backdrop-blur-sm sticky top-0 z-10">
           {/* Panel toggle */}
@@ -249,18 +251,10 @@ export const Dashboard = (): JSX.Element => {
              {/* Membership Performance Chart */}
              <MembershipPerformanceChart/>
 
-            {/* Additional dashboard content */}
-            <div className="space-y-4 mt-8">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
-              {/* Add some demo content to demonstrate scrolling */}
-              {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="font-medium text-gray-900">Activity {i + 1}</h3>
-                  <p className="text-gray-600 mt-2">
-                    This is demo content showing recent activity in your organization.
-                  </p>
-                </div>
-              ))}
+            {/* Recent Applications and Top Member Locations Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <RecentApplicationsCard />
+              <TopMemberLocationsCard />
             </div>
           </div>
         </CardContent>

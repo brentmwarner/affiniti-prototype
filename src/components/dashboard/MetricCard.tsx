@@ -41,8 +41,8 @@ export function MetricCard({
   const renderValueWithSuperscript = (val: string | number) => {
     const stringValue = typeof val === "number" ? val.toLocaleString() : val;
     
-    // Check if the value contains a decimal point
-    if (stringValue.includes('.')) {
+    // Only apply superscript to monetary values (starting with $)
+    if (stringValue.includes('.') && stringValue.startsWith('$')) {
       const [integerPart, decimalPart] = stringValue.split('.');
       return (
         <>
@@ -56,7 +56,7 @@ export function MetricCard({
   };
 
   return (
-    <Card className="overflow-hidden border border-solid border-gray-100 [background:linear-gradient(180deg,rgba(249,250,251,0)_35%,rgba(243,244,246,0.3)_80%)]">
+    <Card className="overflow-hidden border-0 [background:linear-gradient(180deg,rgba(249,250,251,0)_35%,rgba(243,244,246,0.3)_80%)]" style={{ boxShadow: '0 0 2px 0 #afb2ce8f, 0 1px 4px 0 #0404341a' }}>
       <CardContent className="flex flex-col items-start gap-6 p-6">
         <div className="flex flex-col items-start gap-2 w-full">
           <div className="flex items-center justify-between w-full">

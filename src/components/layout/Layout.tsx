@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { GlobalSearch, GlobalSearchRef } from "../ui/global-search";
+import { AddMemberDialog } from "../members/AddMemberDialog";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,6 +33,7 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
   const navigate = useNavigate();
   const globalSearchRef = useRef<GlobalSearchRef>(null);
 
@@ -83,9 +85,9 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
   ];
 
   return (
-    <div className="flex h-screen p-4 relative bg-gray-50 w-full">
+    <div className="flex h-screen pt-4 pb-4 pr-4 relative bg-gray-50 w-full">
       {/* Sidebar */}
-      <div className={`flex flex-col items-start relative h-full bg-gray-50 rounded-l-xl overflow-hidden transition-all duration-300 ${
+      <div className={`flex flex-col items-start relative h-full bg-gray-50 rounded-l-xl overflow-hidden transition-all duration-300 ease-in-out transform ${
         isSidebarCollapsed ? 'w-16' : 'w-[216px]'
       }`}>
         {/* Header with logo */}
@@ -97,32 +99,19 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
             onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
           >
             <img className="relative w-8 h-8" alt="Icon" src="/icon.svg" />
-            {!isSidebarCollapsed && (
-              <div className="flex flex-col items-start gap-0.5 relative flex-1 grow">
-              <div className="relative self-stretch mt-[-1.00px] font-text-sm-leading-none-semibold font-[number:var(--text-sm-leading-none-semibold-font-weight)] text-zinc-700 text-[length:var(--text-sm-leading-none-semibold-font-size)] tracking-[var(--text-sm-leading-none-semibold-letter-spacing)] leading-[var(--text-sm-leading-none-semibold-line-height)] [font-style:var(--text-sm-leading-none-semibold-font-style)]">
+            <div className={`flex flex-col items-start gap-0.5 relative flex-1 grow transition-all duration-300 ease-in-out ${
+              isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+            }`}>
+              <div className="relative self-stretch mt-[-1.00px] font-text-sm-leading-none-semibold font-[number:var(--text-sm-leading-none-semibold-font-weight)] text-zinc-700 text-[length:var(--text-sm-leading-none-semibold-font-size)] tracking-[var(--text-sm-leading-none-semibold-letter-spacing)] leading-[var(--text-sm-leading-none-semibold-line-height)] [font-style:var(--text-sm-leading-none-semibold-font-style)] whitespace-nowrap">
                 NCPA
               </div>
-              </div>
-            )}
-            {!isSidebarCollapsed && <ChevronsUpDownIcon className="w-4 h-4" />}
+            </div>
+            <ChevronsUpDownIcon className={`w-4 h-4 transition-all duration-300 ease-in-out ${
+              isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-4'
+            }`} />
           </div>
         </header>
 
-        {/* Command search */}
-        {!isSidebarCollapsed && (
-          <div className="flex flex-col items-start gap-2 p-2 relative self-stretch w-full flex-[0_0_auto]">
-          <div className="flex h-8 items-center px-3 py-2.5 relative self-stretch w-full bg-[#f3f4f6bf] rounded-md overflow-hidden border border-solid">
-            <div className="relative flex-1 h-5 mt-[-5.00px] mb-[-3.00px] opacity-50 font-text-sm-leading-5-normal font-[number:var(--text-sm-leading-5-normal-font-weight)] text-zinc-950 text-[length:var(--text-sm-leading-5-normal-font-size)] tracking-[var(--text-sm-leading-5-normal-letter-spacing)] leading-[var(--text-sm-leading-5-normal-line-height)] whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--text-sm-leading-5-normal-font-style)]">
-              Commands
-            </div>
-            <div className="flex w-4 h-4 items-center justify-center gap-2 px-px py-[3px] relative mt-[-2.00px] mb-[-2.00px] bg-[#e5e7eb8c] rounded">
-              <div className="relative w-fit mt-[-1.50px] mb-[-0.50px] [font-family:'Inter',Helvetica] font-medium text-gray-400 text-[10px] tracking-[1.00px] leading-3 whitespace-nowrap">
-                /
-              </div>
-            </div>
-          </div>
-          </div>
-        )}
 
         {/* Navigation menu */}
         <nav className="flex flex-col items-start gap-2 relative flex-1 self-stretch w-full grow overflow-y-auto">
@@ -141,17 +130,17 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
                     onClick={() => navigate(item.path)}
                   >
                     {cloneElement(item.icon, { 
-                      className: `w-4 h-4 ${item.active ? 'text-indigo-500' : 'text-gray-500'}` 
+                      className: `w-4 h-4 transition-colors duration-200 ${item.active ? 'text-indigo-500' : 'text-gray-500'}` 
                     })}
-                    {!isSidebarCollapsed && (
-                      <div
-                      className={`relative flex-1 mt-[-1.00px] font-text-sm-leading-5-normal font-[number:var(--text-sm-leading-5-normal-font-weight)] text-[length:var(--text-sm-leading-5-normal-font-size)] tracking-[var(--text-sm-leading-5-normal-letter-spacing)] leading-[var(--text-sm-leading-5-normal-line-height)] [font-style:var(--text-sm-leading-5-normal-font-style)] ${
+                    <div
+                      className={`relative flex-1 mt-[-1.00px] font-text-sm-leading-5-normal font-[number:var(--text-sm-leading-5-normal-font-weight)] text-[length:var(--text-sm-leading-5-normal-font-size)] tracking-[var(--text-sm-leading-5-normal-letter-spacing)] leading-[var(--text-sm-leading-5-normal-line-height)] [font-style:var(--text-sm-leading-5-normal-font-style)] whitespace-nowrap transition-all duration-300 ease-in-out ${
                         item.active ? "text-gray-800" : "text-gray-500"
+                      } ${
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
                       }`}
                     >
                       {item.label}
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -169,28 +158,30 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
           >
             <Avatar className="w-8 h-8 bg-zinc-100">
               <AvatarFallback className="text-zinc-500 text-sm">
-                UN
+                SP
               </AvatarFallback>
             </Avatar>
-            {!isSidebarCollapsed && (
-              <div className="flex flex-col items-start gap-0.5 relative flex-1 grow">
-              <div className="relative self-stretch mt-[-1.00px] font-text-sm-leading-none-semibold font-[number:var(--text-sm-leading-none-semibold-font-weight)] text-zinc-700 text-[length:var(--text-sm-leading-none-semibold-font-size)] tracking-[var(--text-sm-leading-none-semibold-letter-spacing)] leading-[var(--text-sm-leading-none-semibold-line-height)] [font-style:var(--text-sm-leading-none-semibold-font-style)]">
-                User
+            <div className={`flex flex-col items-start gap-0.5 relative flex-1 grow transition-all duration-300 ease-in-out ${
+              isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+            }`}>
+              <div className="relative self-stretch mt-[-1.00px] font-text-sm-leading-none-semibold font-[number:var(--text-sm-leading-none-semibold-font-weight)] text-zinc-700 text-[length:var(--text-sm-leading-none-semibold-font-size)] tracking-[var(--text-sm-leading-none-semibold-letter-spacing)] leading-[var(--text-sm-leading-none-semibold-line-height)] [font-style:var(--text-sm-leading-none-semibold-font-style)] whitespace-nowrap">
+                Sahil Padnis
               </div>
-              <div className="relative self-stretch font-text-xs-leading-4-normal font-[number:var(--text-xs-leading-4-normal-font-weight)] text-zinc-700 text-[length:var(--text-xs-leading-4-normal-font-size)] tracking-[var(--text-xs-leading-4-normal-letter-spacing)] leading-[var(--text-xs-leading-4-normal-line-height)] [font-style:var(--text-xs-leading-4-normal-font-style)]">
-                m@example.com
+              <div className="relative self-stretch font-text-xs-leading-4-normal font-[number:var(--text-xs-leading-4-normal-font-weight)] text-zinc-700 text-[length:var(--text-xs-leading-4-normal-font-size)] tracking-[var(--text-xs-leading-4-normal-letter-spacing)] leading-[var(--text-xs-leading-4-normal-line-height)] [font-style:var(--text-xs-leading-4-normal-font-style)] whitespace-nowrap">
+                email@example.com
               </div>
-              </div>
-            )}
-            {!isSidebarCollapsed && <ChevronsUpDownIcon className="w-4 h-4" />}
+            </div>
+            <ChevronsUpDownIcon className={`w-4 h-4 transition-all duration-300 ease-in-out ${
+              isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-4'
+            }`} />
           </div>
         </footer>
       </div>
 
       {/* Main content */}
-      <Card className="flex flex-col relative flex-1 h-full rounded-r-xl overflow-hidden shadow-shadows-shadow bg-white">
+      <Card className="flex flex-col relative flex-1 h-full rounded-r-xl overflow-hidden bg-white border-0" style={{ boxShadow: '0 0 2px 0 #afb2ce8f, 0 1px 4px 0 #0404341a' }}>
         {/* Top navigation bar */}
-        <div className="flex items-center justify-between p-3 relative self-stretch w-full flex-[0_0_auto] border-b [border-bottom-style:solid] border-gray-100 bg-white/45 backdrop-blur-sm sticky top-0 z-10">
+        <div className="flex items-center justify-between p-2 relative self-stretch w-full flex-[0_0_auto] border-b [border-bottom-style:solid] border-gray-100 bg-white/45 backdrop-blur-sm sticky top-0 z-10">
           {/* Panel toggle */}
           <div className="inline-flex items-center gap-2 pl-0 pr-3 py-1 relative flex-[0_0_auto] border-r [border-right-style:solid] border-gray-100">
             <Button
@@ -248,6 +239,10 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
             <Button
               size="sm"
               className="inline-flex min-w-16 h-8 items-center justify-center px-2 py-1.5 bg-indigo-500 hover:bg-indigo-700 rounded-md"
+              onClick={() => {
+                console.log("Add Member button clicked");
+                setIsAddMemberOpen(true);
+              }}
             >
               <PlusIcon className="w-4 h-4" />
               <span className="inline-flex items-start px-1 py-0 relative flex-[0_0_auto] mt-[-2.00px] mb-[-2.00px]">
@@ -264,6 +259,20 @@ export const Layout = ({ children, activeNav = "Dashboard", searchData }: Layout
           {children}
         </CardContent>
       </Card>
+
+      {/* Add Member Dialog */}
+      <AddMemberDialog 
+        open={isAddMemberOpen} 
+        onOpenChange={(open) => {
+          console.log("Dialog open state changed:", open);
+          setIsAddMemberOpen(open);
+        }}
+        onAddMember={(member) => {
+          console.log("New member added:", member);
+          // In a real app, this would call an API to add the member
+          // and potentially refresh the members list
+        }}
+      />
     </div>
   );
 };

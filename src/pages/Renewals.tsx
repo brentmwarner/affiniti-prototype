@@ -316,26 +316,23 @@ export const Renewals = (): JSX.Element => {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <MetricCard
             title="Renewals"
             value={renewalMetrics.totalRenewals}
-            trend={{ value: 2.5, direction: "up" }}
             description="This month"
             icon={Users}
           />
           <MetricCard
             title="Past Due"
             value={renewalMetrics.pastDue}
-            trend={{ value: 0.5, direction: "down" }}
             description="Requires attention"
             icon={Activity}
             customColor="red"
           />
           <MetricCard
             title="Estimated Renewal Revenue"
-            value={`$${renewalMetrics.totalRevenue.toLocaleString()}`}
-            trend={{ value: 8.2, direction: "up" }}
+            value={`$${renewalMetrics.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             description="Expected this period"
             icon={DollarSign}
           />
