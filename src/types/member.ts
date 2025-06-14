@@ -26,6 +26,26 @@ export interface Member {
   lastActivity: string;
 }
 
+export interface Application {
+  id: string;
+  applicationId: string;
+  businessName: string;
+  contactName: string;
+  email: string;
+  businessPhone: string;
+  businessAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+  requestedTier: 'pharmacy' | 'staff_pharmacist' | 'student' | 'retired' | 'sustaining' | 'corporate' | 'ltc_division';
+  status: 'pending_review' | 'under_review' | 'approved' | 'rejected' | 'requires_info';
+  submittedDate: string;
+  reviewedBy?: string;
+  notes?: string;
+}
+
 export interface MemberFilters {
   search: string;
   status: string;
@@ -34,4 +54,10 @@ export interface MemberFilters {
     start: string;
     end: string;
   };
+}
+
+export type RenewalStatus = 'upcoming' | 'due_soon' | 'past_due' | 'renewed';
+
+export interface MemberWithRenewalStatus extends Member {
+  renewalStatus: RenewalStatus;
 }

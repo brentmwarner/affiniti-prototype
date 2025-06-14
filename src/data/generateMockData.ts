@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Member } from '../types/member';
+import { Member, Application, MemberWithRenewalStatus, RenewalStatus } from '../types/member';
 
 // Pharmacy-specific business name suffixes and types
 const pharmacyTypes = [
@@ -171,5 +171,106 @@ export function generatePharmacyMembers(count: number = 250): Member[] {
   return Array.from({ length: count }, (_, index) => generatePharmacyMember(index));
 }
 
+// Generate realistic application status
+function generateApplicationStatus(): Application['status'] {
+  const rand = Math.random();
+  if (rand < 0.40) return 'pending_review'; // Most applications are pending
+  if (rand < 0.65) return 'under_review'; // Some under review
+  if (rand < 0.80) return 'requires_info'; // Some need more info
+  if (rand < 0.95) return 'approved'; // Some approved
+  return 'rejected'; // Few rejected
+}
+
+// Generate a single application
+function generateApplication(index: number): Application {
+  const businessName = generatePharmacyName();
+  const { tier } = generateMembershipTier();
+  const status = generateApplicationStatus();
+  
+  // Generate applicant name
+  const contactFirstName = faker.person.firstName();
+  const contactLastName = faker.person.lastName();
+  const contactName = `${contactFirstName} ${contactLastName}`;
+  
+  // Generate business address
+  const businessAddress = {
+    street: `${faker.location.buildingNumber()} ${faker.location.street()}`,
+    city: faker.location.city(),
+    state: faker.location.state({ abbreviated: true }),
+    zipCode: faker.location.zipCode()
+  };
+  
+  // Professional contact info
+  const businessPhone = faker.phone.number('(###) ###-####');
+  
+  // Professional email
+  const emailDomain = businessName.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, '')
+    .slice(0, 15) + 
+    faker.helpers.arrayElement(['pharmacy.com', 'rx.com', 'care.com', 'health.net', 'meds.com']);
+  
+  const email = `${contactFirstName.toLowerCase()}.${contactLastName.toLowerCase()}@${emailDomain}`;
+  
+  // Generate submitted date (recent applications)
+  const submittedDate = faker.date.between({ from: '2024-05-01', to: '2024-06-13' });
+  
+  // Add reviewer for applications that have been reviewed
+  const reviewedBy = ['under_review', 'approved', 'rejected'].includes(status) 
+    ? faker.person.fullName() 
+    : undefined;
+  
+  // Add notes for some applications
+  const notes = Math.random() < 0.3 ? faker.lorem.sentence() : undefined;
+  
+  return {
+    id: (index + 1).toString(),
+    applicationId: `APP-${String(index + 1).padStart(4, '0')}`,
+    businessName,
+    contactName,
+    email,
+    businessPhone,
+    businessAddress,
+    requestedTier: tier,
+    status,
+    submittedDate: submittedDate.toISOString().split('T')[0],
+    reviewedBy,
+    notes
+  };
+}
+
+// Generate array of applications
+export function generateApplications(count: number = 25): Application[] {
+  return Array.from({ length: count }, (_, index) => generateApplication(index));
+}
+
+// Calculate renewal status based on renewal date
+function calculateRenewalStatus(renewalDate: string): RenewalStatus {
+  const today = new Date();
+  const renewal = new Date(renewalDate);
+  const diffTime = renewal.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays < 0) {
+    return 'past_due';
+  } else if (diffDays <= 30) {
+    return 'due_soon';
+  } else if (diffDays <= 90) {
+    return 'upcoming';
+  } else {
+    return 'renewed';
+  }
+}
+
+// Generate members with renewal status
+export function generateMembersWithRenewalStatus(count: number = 250): MemberWithRenewalStatus[] {
+  return generatePharmacyMembers(count).map(member => ({
+    ...member,
+    renewalStatus: calculateRenewalStatus(member.renewalDate)
+  }));
+}
+
 // Pre-generated data for immediate use
 export const mockPharmacyMembers = generatePharmacyMembers(250);
+export const mockApplications = generateApplications(25);
+export const mockMembersWithRenewalStatus = generateMembersWithRenewalStatus(250);

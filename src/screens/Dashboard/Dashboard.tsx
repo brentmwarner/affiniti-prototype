@@ -240,7 +240,7 @@ export const Dashboard = (): JSX.Element => {
         <CardContent className="relative flex-1 w-full grow overflow-y-auto p-6">
           <div className="space-y-6">
             <div>
-              <h1 className="text-xl font-normal text-gray-900">Welcome, Sahil</h1>
+              <h1 className="text-2xl leading-8 font-normal text-gray-900">Welcome, Sahil</h1>
             </div>
 
             {/* Metric Cards */}

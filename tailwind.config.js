@@ -20,6 +20,7 @@ module.exports = {
         "text-xs-leading-5-mono-widest":
           "var(--text-xs-leading-5-mono-widest-font-family)",
         sans: [
+          "Inter",
           "ui-sans-serif",
           "system-ui",
           "sans-serif",

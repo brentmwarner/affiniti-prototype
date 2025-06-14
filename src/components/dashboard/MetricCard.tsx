@@ -12,6 +12,7 @@ interface MetricCardProps {
   };
   description?: string;
   icon?: LucideIcon;
+  customColor?: "red" | "green" | "blue" | "orange";
 }
 
 export function MetricCard({
@@ -20,6 +21,7 @@ export function MetricCard({
   trend,
   description,
   icon: Icon,
+  customColor,
 }: MetricCardProps) {
   const TrendIcon = trend?.direction === "up" ? TrendingUp : TrendingDown;
   const trendColorClasses =
@@ -77,7 +79,9 @@ export function MetricCard({
             )}
           </div>
 
-          <h2 className="text-3xl leading-9 tracking-[-0.75px] text-gray-900 font-normal">
+          <h2 className={`text-3xl leading-9 tracking-[-0.75px] font-normal ${
+            customColor === "red" ? "text-red-700" : "text-gray-900"
+          }`}>
             {renderValueWithSuperscript(value)}
           </h2>
         </div>

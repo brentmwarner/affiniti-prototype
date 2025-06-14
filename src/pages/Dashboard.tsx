@@ -8,8 +8,7 @@ export const Dashboard = (): JSX.Element => {
     <Layout activeNav="Dashboard">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Monitor your organization's key metrics and performance.</p>
+          <h1 className="text-2xl leading-8 font-normal text-gray-900">Dashboard</h1>
         </div>
 
         {/* Metric Cards */}

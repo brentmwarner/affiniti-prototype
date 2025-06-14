@@ -248,7 +248,7 @@ export const Layout = ({ children, activeNav = "Dashboard" }: LayoutProps): JSX.
         </div>
 
         {/* Main content area */}
-        <CardContent className="relative flex-1 w-full grow overflow-y-auto p-6">
+        <CardContent className="relative flex-1 w-full grow overflow-y-auto p-7">
           {children}
         </CardContent>
       </Card>
