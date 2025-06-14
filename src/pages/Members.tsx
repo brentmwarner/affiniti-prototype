@@ -538,7 +538,13 @@ export const Members = (): JSX.Element => {
   }, [viewMode, table, activeTab]);
 
   return (
-    <Layout activeNav="Members">
+    <Layout 
+      activeNav="Members"
+      searchData={{
+        members: mockPharmacyMembers,
+        applications: mockApplications
+      }}
+    >
       <div className="space-y-6">
         {/* Header */}
         <div>

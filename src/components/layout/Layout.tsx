@@ -8,26 +8,45 @@ import {
   PanelLeftCloseIcon,
   PlusIcon,
   RefreshCwIcon,
-  SearchIcon,
   SendIcon,
   UsersIcon,
 } from "lucide-react";
-import React, { useState, cloneElement, ReactNode } from "react";
+import { useState, cloneElement, ReactNode, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { GlobalSearch, GlobalSearchRef } from "../ui/global-search";
 
 interface LayoutProps {
   children: ReactNode;
   activeNav?: string;
+  searchData?: {
+    members?: any[];
+    applications?: any[];
+    renewals?: any[];
+  };
 }
 
-export const Layout = ({ children, activeNav = "Dashboard" }: LayoutProps): JSX.Element => {
+export const Layout = ({ children, activeNav = "Dashboard", searchData }: LayoutProps): JSX.Element => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const globalSearchRef = useRef<GlobalSearchRef>(null);
+
+  // Handle Cmd+K keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        globalSearchRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Navigation menu items data
   const navItems = [
@@ -190,19 +209,12 @@ export const Layout = ({ children, activeNav = "Dashboard" }: LayoutProps): JSX.
 
           {/* Search bar */}
           <div className="flex flex-col w-[841px] items-start gap-2 px-14 py-0 relative">
-            <div className="flex h-8 items-center px-3 py-2.5 relative self-stretch w-full bg-white rounded-md overflow-hidden border border-solid">
-              <div className="inline-flex items-center pl-0 pr-2 py-0 relative flex-[0_0_auto] mt-[-2.00px] mb-[-2.00px]">
-                <SearchIcon className="w-4 h-4" />
-              </div>
-              <div className="relative flex-1 h-5 mt-[-5.00px] mb-[-3.00px] opacity-50 font-text-sm-leading-5-normal font-[number:var(--text-sm-leading-5-normal-font-weight)] text-zinc-950 text-[length:var(--text-sm-leading-5-normal-font-size)] tracking-[var(--text-sm-leading-5-normal-letter-spacing)] leading-[var(--text-sm-leading-5-normal-line-height)] whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--text-sm-leading-5-normal-font-style)]">
-                Search
-              </div>
-              <div className="flex w-5 items-center justify-center gap-2 px-0.5 py-[3px] relative mt-[-3.00px] mb-[-3.00px] bg-[#e5e7eb8c] rounded">
-                <div className="relative w-[18px] mt-[-0.50px] ml-[-1.00px] mr-[-1.00px] [font-family:'Inter',Helvetica] font-medium text-gray-400 text-[10px] tracking-[1.00px] leading-3">
-                  ⌘K
-                </div>
-              </div>
-            </div>
+            <GlobalSearch 
+              ref={globalSearchRef}
+              data={searchData}
+              onNavigate={navigate}
+              className="w-full"
+            />
           </div>
 
           {/* Action buttons */}

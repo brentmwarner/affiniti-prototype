@@ -2,10 +2,17 @@ import React from "react";
 import { Layout } from "../components/layout/Layout";
 import { DashboardMetrics } from "../components/dashboard/DashboardMetrics";
 import { MembershipPerformanceChart } from "../components/dashboard/MembershipPerformanceChart";
+import { mockPharmacyMembers, mockApplications } from "../data/generateMockData";
 
 export const Dashboard = (): JSX.Element => {
   return (
-    <Layout activeNav="Dashboard">
+    <Layout 
+      activeNav="Dashboard"
+      searchData={{
+        members: mockPharmacyMembers,
+        applications: mockApplications
+      }}
+    >
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl leading-8 font-normal text-gray-900">Dashboard</h1>

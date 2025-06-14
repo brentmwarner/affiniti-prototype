@@ -39,7 +39,7 @@ import {
   TableRow,
 } from "../components/ui/table";
 import { MemberWithRenewalStatus, RenewalStatus } from "../types/member";
-import { mockMembersWithRenewalStatus } from "../data/generateMockData";
+import { mockMembersWithRenewalStatus, mockPharmacyMembers, mockApplications } from "../data/generateMockData";
 import { MetricCard } from "../components/dashboard/MetricCard";
 import { Users, DollarSign, TrendingUp, Activity } from "lucide-react";
 import { useToast } from "../components/ui/toast";
@@ -285,7 +285,14 @@ export const Renewals = (): JSX.Element => {
 
 
   return (
-    <Layout activeNav="Renewals">
+    <Layout 
+      activeNav="Renewals"
+      searchData={{
+        members: mockPharmacyMembers,
+        applications: mockApplications,
+        renewals: mockMembersWithRenewalStatus
+      }}
+    >
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
