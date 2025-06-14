@@ -26,106 +26,102 @@ import {
 } from "../ui/select"
 
 const chartData = [
-  { date: "2024-04-01", student: 25, pharmacy: 150, corporate: 80 },
-  { date: "2024-04-02", student: 28, pharmacy: 162, corporate: 85 },
-  { date: "2024-04-03", student: 22, pharmacy: 158, corporate: 78 },
-  { date: "2024-04-04", student: 30, pharmacy: 175, corporate: 92 },
-  { date: "2024-04-05", student: 35, pharmacy: 180, corporate: 95 },
-  { date: "2024-04-06", student: 32, pharmacy: 185, corporate: 88 },
-  { date: "2024-04-07", student: 27, pharmacy: 172, corporate: 82 },
-  { date: "2024-04-08", student: 38, pharmacy: 195, corporate: 105 },
-  { date: "2024-04-09", student: 20, pharmacy: 165, corporate: 75 },
-  { date: "2024-04-10", student: 29, pharmacy: 178, corporate: 90 },
-  { date: "2024-04-11", student: 34, pharmacy: 188, corporate: 98 },
-  { date: "2024-04-12", student: 31, pharmacy: 182, corporate: 87 },
-  { date: "2024-04-13", student: 36, pharmacy: 192, corporate: 102 },
-  { date: "2024-04-14", student: 24, pharmacy: 168, corporate: 79 },
-  { date: "2024-04-15", student: 19, pharmacy: 155, corporate: 72 },
-  { date: "2024-04-16", student: 26, pharmacy: 170, corporate: 84 },
-  { date: "2024-04-17", student: 40, pharmacy: 198, corporate: 108 },
-  { date: "2024-04-18", student: 42, pharmacy: 205, corporate: 112 },
-  { date: "2024-04-19", student: 28, pharmacy: 175, corporate: 89 },
-  { date: "2024-04-20", student: 21, pharmacy: 160, corporate: 76 },
-  { date: "2024-04-21", student: 27, pharmacy: 172, corporate: 85 },
-  { date: "2024-04-22", student: 25, pharmacy: 165, corporate: 80 },
-  { date: "2024-04-23", student: 33, pharmacy: 185, corporate: 94 },
-  { date: "2024-04-24", student: 45, pharmacy: 210, corporate: 118 },
-  { date: "2024-04-25", student: 38, pharmacy: 195, corporate: 105 },
-  { date: "2024-04-26", student: 14, pharmacy: 130, corporate: 62 },
-  { date: "2024-04-27", student: 48, pharmacy: 220, corporate: 125 },
-  { date: "2024-04-28", student: 24, pharmacy: 168, corporate: 82 },
-  { date: "2024-04-29", student: 35, pharmacy: 188, corporate: 96 },
-  { date: "2024-04-30", student: 50, pharmacy: 225, corporate: 130 },
-  { date: "2024-05-01", student: 29, pharmacy: 175, corporate: 88 },
-  { date: "2024-05-02", student: 39, pharmacy: 198, corporate: 108 },
-  { date: "2024-05-03", student: 32, pharmacy: 182, corporate: 92 },
-  { date: "2024-05-04", student: 46, pharmacy: 215, corporate: 122 },
-  { date: "2024-05-05", student: 52, pharmacy: 235, corporate: 135 },
-  { date: "2024-05-06", student: 55, pharmacy: 248, corporate: 142 },
-  { date: "2024-05-07", student: 42, pharmacy: 205, corporate: 115 },
-  { date: "2024-05-08", student: 23, pharmacy: 165, corporate: 78 },
-  { date: "2024-05-09", student: 28, pharmacy: 178, corporate: 86 },
-  { date: "2024-05-10", student: 38, pharmacy: 195, corporate: 105 },
-  { date: "2024-05-11", student: 35, pharmacy: 188, corporate: 98 },
-  { date: "2024-05-12", student: 27, pharmacy: 172, corporate: 85 },
-  { date: "2024-05-13", student: 22, pharmacy: 158, corporate: 75 },
-  { date: "2024-05-14", student: 58, pharmacy: 252, corporate: 148 },
-  { date: "2024-05-15", student: 53, pharmacy: 238, corporate: 138 },
-  { date: "2024-05-16", student: 44, pharmacy: 210, corporate: 118 },
-  { date: "2024-05-17", student: 62, pharmacy: 265, corporate: 155 },
-  { date: "2024-05-18", student: 39, pharmacy: 195, corporate: 108 },
-  { date: "2024-05-19", student: 28, pharmacy: 172, corporate: 86 },
-  { date: "2024-05-20", student: 25, pharmacy: 165, corporate: 82 },
-  { date: "2024-05-21", student: 12, pharmacy: 125, corporate: 58 },
-  { date: "2024-05-22", student: 10, pharmacy: 115, corporate: 55 },
-  { date: "2024-05-23", student: 34, pharmacy: 185, corporate: 95 },
-  { date: "2024-05-24", student: 30, pharmacy: 175, corporate: 88 },
-  { date: "2024-05-25", student: 26, pharmacy: 168, corporate: 84 },
-  { date: "2024-05-26", student: 21, pharmacy: 155, corporate: 76 },
-  { date: "2024-05-27", student: 56, pharmacy: 245, corporate: 142 },
-  { date: "2024-05-28", student: 27, pharmacy: 172, corporate: 85 },
-  { date: "2024-05-29", student: 19, pharmacy: 148, corporate: 72 },
-  { date: "2024-05-30", student: 43, pharmacy: 205, corporate: 115 },
-  { date: "2024-05-31", student: 29, pharmacy: 175, corporate: 88 },
-  { date: "2024-06-01", student: 26, pharmacy: 168, corporate: 84 },
-  { date: "2024-06-02", student: 52, pharmacy: 235, corporate: 135 },
-  { date: "2024-06-03", student: 15, pharmacy: 138, corporate: 66 },
-  { date: "2024-06-04", student: 48, pharmacy: 225, corporate: 128 },
-  { date: "2024-06-05", student: 18, pharmacy: 145, corporate: 70 },
-  { date: "2024-06-06", student: 32, pharmacy: 182, corporate: 92 },
-  { date: "2024-06-07", student: 38, pharmacy: 195, corporate: 105 },
-  { date: "2024-06-08", student: 43, pharmacy: 208, corporate: 118 },
-  { date: "2024-06-09", student: 60, pharmacy: 258, corporate: 152 },
-  { date: "2024-06-10", student: 28, pharmacy: 172, corporate: 86 },
-  { date: "2024-06-11", student: 21, pharmacy: 155, corporate: 75 },
-  { date: "2024-06-12", student: 65, pharmacy: 268, corporate: 158 },
-  { date: "2024-06-13", student: 19, pharmacy: 148, corporate: 72 },
-  { date: "2024-06-14", student: 53, pharmacy: 238, corporate: 138 },
-  { date: "2024-06-15", student: 40, pharmacy: 198, corporate: 108 },
-  { date: "2024-06-16", student: 46, pharmacy: 215, corporate: 122 },
-  { date: "2024-06-17", student: 68, pharmacy: 275, corporate: 165 },
-  { date: "2024-06-18", student: 16, pharmacy: 140, corporate: 68 },
-  { date: "2024-06-19", student: 38, pharmacy: 195, corporate: 105 },
-  { date: "2024-06-20", student: 55, pharmacy: 248, corporate: 142 },
-  { date: "2024-06-21", student: 29, pharmacy: 175, corporate: 88 },
-  { date: "2024-06-22", student: 34, pharmacy: 188, corporate: 96 },
-  { date: "2024-06-23", student: 72, pharmacy: 285, corporate: 172 },
-  { date: "2024-06-24", student: 25, pharmacy: 168, corporate: 82 },
-  { date: "2024-06-25", student: 27, pharmacy: 172, corporate: 85 },
-  { date: "2024-06-26", student: 54, pharmacy: 242, corporate: 140 },
-  { date: "2024-06-27", student: 62, pharmacy: 265, corporate: 155 },
-  { date: "2024-06-28", student: 30, pharmacy: 178, corporate: 88 },
-  { date: "2024-06-29", student: 21, pharmacy: 155, corporate: 75 },
-  { date: "2024-06-30", student: 58, pharmacy: 258, corporate: 148 },
+  { date: "2024-04-01", pharmacy: 150, corporate: 80 },
+  { date: "2024-04-02", pharmacy: 162, corporate: 85 },
+  { date: "2024-04-03", pharmacy: 158, corporate: 78 },
+  { date: "2024-04-04", pharmacy: 175, corporate: 92 },
+  { date: "2024-04-05", pharmacy: 180, corporate: 95 },
+  { date: "2024-04-06", pharmacy: 185, corporate: 88 },
+  { date: "2024-04-07", pharmacy: 172, corporate: 82 },
+  { date: "2024-04-08", pharmacy: 195, corporate: 105 },
+  { date: "2024-04-09", pharmacy: 165, corporate: 75 },
+  { date: "2024-04-10", pharmacy: 178, corporate: 90 },
+  { date: "2024-04-11", pharmacy: 188, corporate: 98 },
+  { date: "2024-04-12", pharmacy: 182, corporate: 87 },
+  { date: "2024-04-13", pharmacy: 192, corporate: 102 },
+  { date: "2024-04-14", pharmacy: 168, corporate: 79 },
+  { date: "2024-04-15", pharmacy: 155, corporate: 72 },
+  { date: "2024-04-16", pharmacy: 170, corporate: 84 },
+  { date: "2024-04-17", pharmacy: 198, corporate: 108 },
+  { date: "2024-04-18", pharmacy: 205, corporate: 112 },
+  { date: "2024-04-19", pharmacy: 175, corporate: 89 },
+  { date: "2024-04-20", pharmacy: 160, corporate: 76 },
+  { date: "2024-04-21", pharmacy: 172, corporate: 85 },
+  { date: "2024-04-22", pharmacy: 165, corporate: 80 },
+  { date: "2024-04-23", pharmacy: 185, corporate: 94 },
+  { date: "2024-04-24", pharmacy: 210, corporate: 118 },
+  { date: "2024-04-25", pharmacy: 195, corporate: 105 },
+  { date: "2024-04-26", pharmacy: 130, corporate: 62 },
+  { date: "2024-04-27", pharmacy: 220, corporate: 125 },
+  { date: "2024-04-28", pharmacy: 168, corporate: 82 },
+  { date: "2024-04-29", pharmacy: 188, corporate: 96 },
+  { date: "2024-04-30", pharmacy: 225, corporate: 130 },
+  { date: "2024-05-01", pharmacy: 175, corporate: 88 },
+  { date: "2024-05-02", pharmacy: 198, corporate: 108 },
+  { date: "2024-05-03", pharmacy: 182, corporate: 92 },
+  { date: "2024-05-04", pharmacy: 215, corporate: 122 },
+  { date: "2024-05-05", pharmacy: 235, corporate: 135 },
+  { date: "2024-05-06", pharmacy: 248, corporate: 142 },
+  { date: "2024-05-07", pharmacy: 205, corporate: 115 },
+  { date: "2024-05-08", pharmacy: 165, corporate: 78 },
+  { date: "2024-05-09", pharmacy: 178, corporate: 86 },
+  { date: "2024-05-10", pharmacy: 195, corporate: 105 },
+  { date: "2024-05-11", pharmacy: 188, corporate: 98 },
+  { date: "2024-05-12", pharmacy: 172, corporate: 85 },
+  { date: "2024-05-13", pharmacy: 158, corporate: 75 },
+  { date: "2024-05-14", pharmacy: 252, corporate: 148 },
+  { date: "2024-05-15", pharmacy: 238, corporate: 138 },
+  { date: "2024-05-16", pharmacy: 210, corporate: 118 },
+  { date: "2024-05-17", pharmacy: 265, corporate: 155 },
+  { date: "2024-05-18", pharmacy: 195, corporate: 108 },
+  { date: "2024-05-19", pharmacy: 172, corporate: 86 },
+  { date: "2024-05-20", pharmacy: 165, corporate: 82 },
+  { date: "2024-05-21", pharmacy: 125, corporate: 58 },
+  { date: "2024-05-22", pharmacy: 115, corporate: 55 },
+  { date: "2024-05-23", pharmacy: 185, corporate: 95 },
+  { date: "2024-05-24", pharmacy: 175, corporate: 88 },
+  { date: "2024-05-25", pharmacy: 168, corporate: 84 },
+  { date: "2024-05-26", pharmacy: 155, corporate: 76 },
+  { date: "2024-05-27", pharmacy: 245, corporate: 142 },
+  { date: "2024-05-28", pharmacy: 172, corporate: 85 },
+  { date: "2024-05-29", pharmacy: 148, corporate: 72 },
+  { date: "2024-05-30", pharmacy: 205, corporate: 115 },
+  { date: "2024-05-31", pharmacy: 175, corporate: 88 },
+  { date: "2024-06-01", pharmacy: 168, corporate: 84 },
+  { date: "2024-06-02", pharmacy: 235, corporate: 135 },
+  { date: "2024-06-03", pharmacy: 138, corporate: 66 },
+  { date: "2024-06-04", pharmacy: 225, corporate: 128 },
+  { date: "2024-06-05", pharmacy: 145, corporate: 70 },
+  { date: "2024-06-06", pharmacy: 182, corporate: 92 },
+  { date: "2024-06-07", pharmacy: 195, corporate: 105 },
+  { date: "2024-06-08", pharmacy: 208, corporate: 118 },
+  { date: "2024-06-09", pharmacy: 258, corporate: 152 },
+  { date: "2024-06-10", pharmacy: 172, corporate: 86 },
+  { date: "2024-06-11", pharmacy: 155, corporate: 75 },
+  { date: "2024-06-12", pharmacy: 268, corporate: 158 },
+  { date: "2024-06-13", pharmacy: 148, corporate: 72 },
+  { date: "2024-06-14", pharmacy: 238, corporate: 138 },
+  { date: "2024-06-15", pharmacy: 198, corporate: 108 },
+  { date: "2024-06-16", pharmacy: 215, corporate: 122 },
+  { date: "2024-06-17", pharmacy: 275, corporate: 165 },
+  { date: "2024-06-18", pharmacy: 140, corporate: 68 },
+  { date: "2024-06-19", pharmacy: 195, corporate: 105 },
+  { date: "2024-06-20", pharmacy: 248, corporate: 142 },
+  { date: "2024-06-21", pharmacy: 175, corporate: 88 },
+  { date: "2024-06-22", pharmacy: 188, corporate: 96 },
+  { date: "2024-06-23", pharmacy: 285, corporate: 172 },
+  { date: "2024-06-24", pharmacy: 168, corporate: 82 },
+  { date: "2024-06-25", pharmacy: 172, corporate: 85 },
+  { date: "2024-06-26", pharmacy: 242, corporate: 140 },
+  { date: "2024-06-27", pharmacy: 265, corporate: 155 },
+  { date: "2024-06-28", pharmacy: 178, corporate: 88 },
+  { date: "2024-06-29", pharmacy: 155, corporate: 75 },
+  { date: "2024-06-30", pharmacy: 258, corporate: 148 },
 ]
 
 const chartConfig = {
   members: {
     label: "Members",
-  },
-  student: {
-    label: "Student Membership",
-    color: "hsl(12 76% 61%)",
   },
   pharmacy: {
     label: "Pharmacy Membership",
@@ -136,6 +132,28 @@ const chartConfig = {
     color: "hsl(188 94% 68%)",
   },
 } satisfies ChartConfig
+
+// Custom legend component with circles
+const CustomLegend = () => {
+  return (
+    <div className="flex items-center justify-center gap-4 pt-3">
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs leading-4 font-normal text-gray-500">Corporate Membership</span>
+        <div
+          className="h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: "hsl(188 94% 68%)" }}
+        />
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs leading-4 font-normal text-gray-500">Pharmacy Membership</span>
+        <div
+          className="h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: "hsl(238 75% 65%)" }}
+        />
+      </div>
+    </div>
+  )
+}
 
 export function MembershipPerformanceChart() {
   const [timeRange, setTimeRange] = React.useState("90d")
@@ -249,18 +267,6 @@ export function MembershipPerformanceChart() {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <defs>
-              <linearGradient id="fillStudent" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-student)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-student)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
               <linearGradient id="fillPharmacy" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -287,14 +293,6 @@ export function MembershipPerformanceChart() {
               </linearGradient>
             </defs>
             <Area
-              dataKey="student"
-              type="natural"
-              fill="url(#fillStudent)"
-              fillOpacity={0.4}
-              stroke="var(--color-student)"
-              stackId="a"
-            />
-            <Area
               dataKey="corporate"
               type="natural"
               fill="url(#fillCorporate)"
@@ -310,9 +308,9 @@ export function MembershipPerformanceChart() {
               stroke="var(--color-pharmacy)"
               stackId="a"
             />
-            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
+        <CustomLegend />
       </CardContent>
     </Card>
   )

@@ -27,10 +27,10 @@ export function DashboardMetrics() {
         icon={Activity}
       />
       <MetricCard
-        title="Renewals Due"
-        value="1,569"
+        title="Retention Rate"
+        value="87.9%"
         trend={{ value: 0.8, direction: "up" }}
-        description="Next 30 days"
+        description="From last month"
         icon={TrendingUp}
       />
     </div>

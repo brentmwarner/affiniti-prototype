@@ -601,7 +601,7 @@ export const Members = (): JSX.Element => {
                   group inline-flex items-center py-4 px-1 border-b-2 font-medium text-lg leading-7 transition-colors duration-200
                   ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-indigo-500 text-gray-800'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }
                 `}
@@ -611,7 +611,7 @@ export const Members = (): JSX.Element => {
                   ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium transition-colors duration-200
                   ${
                     activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-600'
+                      ? 'bg-indigo-500 text-white'
                       : 'bg-gray-100 text-gray-900 group-hover:bg-gray-200'
                   }
                 `}>
